@@ -5,17 +5,24 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import './Migrations.sol';
 
 contract TradedToken is MintableToken, Migrations {
-    uint256 public sellPrice= 0.01 finney;
-    uint356 public buyPrice=  0.0105 finney ; 
+    uint256 private sellPrice = 0.01 finney;
+    uint256 private buyPrice = 0.011 finney; 
     event PricesChanged(uint256 sellPrice,uint256 buyPrice);
 
-    function setPrices(uint256 _sellPrice,uint256 _buyPrice) onlyOwner {
-        this.setSellPice = _sellPrice;
-        this.buyPrice = _buyPrice;
+    function setPrices(uint256 _sellPrice,uint256 _buyPrice) public onlyOwner {
+        sellPrice = _sellPrice;
+        buyPrice = _buyPrice;
         PricesChanged(_sellPrice,_buyPrice);
     }
-    function buy() payable returns (uint amount) {
-        amount = msg.valuu / this.buyPrice;
+
+    function getPrices() public view returns (uint256 _sellPrice,uint256 _buyPrice) {
+        _sellPrice = sellPrice;
+        _buyPrice = buyPrice;
+        return (_sellPrice,_buyPrice);
+    }
+    function buy() public payable returns (uint amount) {
+        amount = msg.value / buyPrice;
+        require(amount >= 1);
         require(balanceOf(this) >= amount);
         balances[msg.sender].add(amount);
         balances[this].sub(amount);
@@ -23,7 +30,7 @@ contract TradedToken is MintableToken, Migrations {
         return amount;
     }
 
-    function sell(uint amount) returns (uint revenue) {
+    function sell(uint amount) public returns (uint revenue) {
         require(balances[msg.sender] >= amount);
         balances[this].add(amount);
         balances[msg.sender].sub(amount);
