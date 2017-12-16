@@ -1,5 +1,6 @@
 var Simplotoken = artifacts.require("Simplotoken");
 
+
 contract("Simplotoken",function(accounts) {
    it("should put 1M on the first account",()=> {
        return Simplotoken.deployed().then((instance)=>{
@@ -15,5 +16,15 @@ contract("Simplotoken",function(accounts) {
     }).then(owner => {
         assert.equal(accounts[0],owner);
     })
+   })
+   it("check tour",async ()=> {
+    var instance = await Simplotoken.deployed();
+    var tour = await instance.tour();
+    console.log(tour);
+   })
+   it("check buy", async () => {
+    var instance = await Simplotoken.deployed();
+    var coins = await instance.buy({from: accounts[1],value: web3.toWei(0.033,'finney')});
+    console.log(coins);    
    })
 })
