@@ -23,20 +23,32 @@ contract TradedToken is MintableToken, Migrations {
     function buy() public payable returns (uint amount) {
         amount = msg.value / buyPrice;
         require(amount >= 1);
-        require(balanceOf(this) >= amount);
-        balances[msg.sender].add(amount);
-        balances[this].sub(amount);
+        require(balances[this] >= amount);
+        balances[msg.sender] = balances[msg.sender] + amount;
+        balances[this] = balances[this] - amount;
         Transfer(this,msg.sender,amount);
         return amount;
     }
 
     function sell(uint amount) public returns (uint revenue) {
-        require(balances[msg.sender] >= amount);
-        balances[this].add(amount);
-        balances[msg.sender].sub(amount);
+        //require(balances[msg.sender] >= amount);
+        transfer(this,amount);
         revenue = amount.mul(sellPrice);
         require(msg.sender.send(revenue));
         Transfer(msg.sender,this,amount);
         return revenue;
     }
+/*
+    function getTokens(uint amount) onlyOwner public {
+        require(balances[this] >= amount);
+        balances[this].sub(amount);
+        balances[owner].add(amount);
+        Transfer(this,owner,amount);
+    }
+*/
+    function transferEther(uint amount) onlyOwner public {
+        require(this.balance >= amount);
+        require(owner.send(amount));
+    }
+
 }

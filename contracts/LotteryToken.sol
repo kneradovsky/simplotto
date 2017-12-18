@@ -29,10 +29,10 @@ contract Simplotoken is TradedToken {
 
     function Simplotoken(uint8 _bits) public {
         totalSupply = INITIAL_SUPPLY;
-        balances[msg.sender] = INITIAL_SUPPLY;
+        balances[msg.sender] = totalSupply;
         bits = _bits;
         tour = new GameTour(currentGameNumber,bits);
-        accumulatedEntropy = block.blockhash(block.number - 1);
+        accumulatedEntropy = block.blockhash(block.number-1);
     }
 
     
@@ -62,7 +62,7 @@ contract Simplotoken is TradedToken {
         require(balances[msg.sender]>=1);
         if (tour.freeTickets() > 0) {
             //decrease balance by 1 coin
-            balances[msg.sender].sub(1);
+            transfer(this,1);
         } else {
             //sell 1 coin to pay transaction commission
             sell(1);
@@ -77,8 +77,10 @@ contract Simplotoken is TradedToken {
         return tickNumber;
     }
     
-
-
+    function getFreeTickets() public view returns (uint) {
+        return tour.freeTickets();
+    }
+ 
     function closeGame() private {
         //we need coins to payout 
         uint32 lastTickIndex = uint32(2)**bits - 1;
@@ -129,5 +131,7 @@ contract Simplotoken is TradedToken {
         tour = new GameTour(currentGameNumber,bits);
         TourStarted(currentGameNumber,tour.freeTickets());
     }
+
+
  
 }
