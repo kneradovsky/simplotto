@@ -1,5 +1,6 @@
 var Simplotoken = artifacts.require("Simplotoken");
 
+
 contract("Simplotoken",function(accounts) {
    it("should put funds on the self account",async ()=> {
         var instance = await Simplotoken.deployed();

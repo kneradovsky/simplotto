@@ -12,8 +12,7 @@ contract GameTour {
 
     function GameTour(uint32 _gameNumber,uint8 _bits) public {
         bits = _bits;
-        uint32 b = _bits;
-        freeTickets = uint32(2) ** b;
+        freeTickets = uint32(2) ** bits;
         tickets = new address[](freeTickets);
         nextIndex = 0;
         gameNumber = _gameNumber;

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.17; 
 
 import './TradedToken.sol';
 import './GameTour.sol';
@@ -33,6 +33,7 @@ contract Simplotoken is TradedToken {
         bits = _bits;
         tour = new GameTour(currentGameNumber,bits);
         accumulatedEntropy = block.blockhash(block.number-1);
+        TourStarted(currentGameNumber,tour.freeTickets());
     }
 
     

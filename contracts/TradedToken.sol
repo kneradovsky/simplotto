@@ -21,7 +21,7 @@ contract TradedToken is MintableToken, Migrations {
         return (_sellPrice,_buyPrice);
     }
     function buy() public payable returns (uint amount) {
-        amount = msg.value / buyPrice;
+        amount = msg.value.div(buyPrice);
         require(amount >= 1);
         require(balances[this] >= amount);
         balances[msg.sender] = balances[msg.sender] + amount;
