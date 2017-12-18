@@ -89,7 +89,7 @@ contract Simplotoken is TradedToken {
         uint32 pseudoRand = uint32(generatePseudoRand(bytes32(block.timestamp)));
         uint32[] memory indexes = new uint32[](payouts.length);
         for (uint i = 0;i < payouts.length;i++) {
-            //too much right shift is not a problem because we don't plan to have more than 65525 tickets
+            //too much right shifts is not a problem because we don't plan to have more than 65525 tickets
             indexes[i] = (pseudoRand & (lastTickIndex << (i+1))) >> (i+1);  
         }
         //normalize indexes. If index already exists - increment it.
@@ -122,7 +122,8 @@ contract Simplotoken is TradedToken {
         var winners = tour.getWinners();
         for (uint i = 0;i < winners.length ; i++) {
             uint payout = uint256(tickCount).mul(payouts[i]).div(100); //get ticket payout
-            require(transferFrom(this,winners[i],payout));
+            //send from this balance to winner balance;
+            _transferInternal(this,winners[i],payout);
         }
     }
 
@@ -133,6 +134,11 @@ contract Simplotoken is TradedToken {
         TourStarted(currentGameNumber,tour.freeTickets());
     }
 
+    function _transferInternal(address from, address to, uint amount) private {
+        require(balances[from] >= amount);
+        balances[to] = balances[to] + amount;
+        balances[from] = balances[from] - amount;
+    }
 
  
 }

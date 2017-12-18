@@ -68,5 +68,7 @@ contract("Simplotoken",function(accounts) {
     assert.equal(ctEthers2.valueOf(),ctEthers.minus(amount).valueOf(),'contract ethers failed');
     assert.equal(ctTokens2.toNumber(),ctTokens.toNumber()+tokens,'contract tokens failed');
     assert.equal(ac1Tokens2.toNumber(),ac1Tokens.toNumber()-tokens,'account tokens failed');
-   })   
+   })
+
+
 })
