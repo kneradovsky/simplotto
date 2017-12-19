@@ -1,7 +1,7 @@
 pragma solidity ^0.4.17;
 
 contract GameTour {
-    uint8  bits;
+    uint8  public bits;
     address[10] public winners;
     uint32 public nextIndex;
     uint32 public freeTickets;

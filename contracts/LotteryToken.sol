@@ -81,7 +81,8 @@ contract Simplotoken is TradedToken {
     function getFreeTickets() public view returns (uint) {
         return tour.freeTickets();
     }
- 
+
+
     function closeGame() private {
         //we need coins to payout 
         uint32 lastTickIndex = uint32(2)**bits - 1;
