@@ -41,7 +41,7 @@ contract("Simplotoken",function(accounts) {
     var ctEthers = await web3.eth.getBalance(ct.contract.address);
     var ctTokens = await ct.balanceOf(ct.contract.address);
     var ac1Tokens = await ct.balanceOf(accounts[1]);
-    var buyPrice = 0.011;
+    var buyPrice = 11;
     var tokens = 3;
     var amount = web3.toWei(buyPrice*tokens,'finney')
     var tx = await ct.buy({from: accounts[1],value: amount});
@@ -58,7 +58,7 @@ contract("Simplotoken",function(accounts) {
     var ctEthers = await web3.eth.getBalance(ct.contract.address);
     var ctTokens = await ct.balanceOf(ct.contract.address);
     var ac1Tokens = await ct.balanceOf(accounts[1]);
-    var sellPrice = 0.01;
+    var sellPrice = 10;
     var tokens = 3;
     var amount = web3.toWei(sellPrice*tokens,'finney')
     var tx = await ct.sell(tokens,{from: accounts[1]});

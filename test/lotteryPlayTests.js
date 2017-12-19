@@ -24,7 +24,7 @@ contract("Simplotoken",function(accounts) {
         var ethBalance = web3.eth.getBalance(ct.contract.address);
         console.log(`Balance of contract is ${web3.fromWei(ethBalance,'ether')} ethers`);
 
-        var buyPrice = 0.011;
+        var buyPrice = 11;
         var tokens = 30;
         var amount = Math.ceil(web3.toWei(buyPrice*tokens,'finney'));
         for(var i=0;i<10;i++) {

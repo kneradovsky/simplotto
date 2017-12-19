@@ -5,8 +5,8 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import './Migrations.sol';
 
 contract TradedToken is MintableToken, Migrations {
-    uint256 public sellPrice = 0.01 finney;
-    uint256 public buyPrice = 0.011 finney; 
+    uint256 public sellPrice = 10 finney;
+    uint256 public buyPrice = 11 finney; 
     event PricesChanged(uint256 sellPrice,uint256 buyPrice);
 
     function setPrices(uint256 _sellPrice,uint256 _buyPrice) public onlyOwner {
