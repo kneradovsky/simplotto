@@ -1,0 +1,8 @@
+  <div>
+    {{accs | json }}
+    <div *ngFor="let acc of accs">
+      {{acc}}
+      <div>{{balances[acc].eth}}</div>
+      <div>{{balances[acc].slt}}</div>      
+    </div>
+  </div> 
