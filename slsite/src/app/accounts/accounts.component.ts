@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Web3Service} from '../web3.service';
 
 @Component({
@@ -11,7 +11,7 @@ export class AccountsComponent implements OnInit {
   balances :any = {};
   accs : string[];
 
-  constructor(private web3:  Web3Service ) { 
+  constructor(private web3:  Web3Service,private ref: ChangeDetectorRef) { 
 
   }
 
@@ -35,12 +35,14 @@ export class AccountsComponent implements OnInit {
       web3api.eth.getBalance(acc).then(b => {
         if(b == null) b=0;
         self.balances[acc]=Object.assign(self.balances[acc],{eth:b})
-        console.log(self.balances);
+        this.ref.detectChanges();    
       });
       self.web3.Simplotoken.balanceOf(acc).then(tokens => {
         self.balances[acc]=Object.assign(self.balances[acc],{slt:tokens});
+        this.ref.detectChanges();
       });
     })
+    this.ref.detectChanges();
   }
 
 }
