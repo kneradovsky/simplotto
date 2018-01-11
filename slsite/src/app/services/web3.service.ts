@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import contract = require('truffle-contract');
 import Web3  = require('web3');
 
-import simplotto_artifacts = require('../../../build/contracts/Simplotoken.json');
+import simplotto_artifacts = require('../../../../build/contracts/Simplotoken.json');
 import { WindowRefService } from './window-ref.service';
 
 

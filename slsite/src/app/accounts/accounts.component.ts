@@ -1,5 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Web3Service} from '../web3.service';
+import { Web3Service} from '../services/web3.service';
+
+
 
 @Component({
   selector: 'app-accounts',
