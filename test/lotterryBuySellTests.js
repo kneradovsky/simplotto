@@ -4,11 +4,15 @@ var Simplotoken = artifacts.require("Simplotoken");
 contract("Simplotoken",function(accounts) {
    it("should put funds on the self account",async ()=> {
         var instance = await Simplotoken.deployed();
-        var ownerBalance = await instance.balanceOf(accounts[0]);
-        assert.equal(ownerBalance.valueOf(),1000000,"INITIAL SUPPLY won't load to the owners account");
-        var tx = await instance.transfer(instance.contract.address,500000,{from : accounts[0]});
         var contractBalance = await instance.balanceOf(instance.contract.address);
-        assert.equal(contractBalance.valueOf(),500000,"INITIAL SUPPLY won't load to the contract account");
+        assert.equal(contractBalance.valueOf(),1000000,"INITIAL SUPPLY won't load to the contract account");
+    })
+    it("mint tokens",async () => {
+        var instance = await Simplotoken.deployed();
+        //mint tokens to the owner account
+        var tx = await instance.mint(accounts[0],500000,{from : accounts[0]});
+        var ownerBalance = await instance.balanceOf(accounts[0]);
+        assert.equal(ownerBalance.valueOf(),500000,"INITIAL SUPPLY won't load to the owner account");
     })
     it("check owner",() => {
     return Simplotoken.deployed().then((instance)=> {

@@ -5,7 +5,7 @@ contract GameTour {
     address[10] public winners;
     uint32 public nextIndex;
     uint32 public freeTickets;
-    address[] public tickets;
+    address[256] public tickets;
     uint32 public gameNumber;
     
   
@@ -13,7 +13,7 @@ contract GameTour {
     function GameTour(uint32 _gameNumber,uint8 _bits) public {
         bits = _bits;
         freeTickets = uint32(2) ** bits;
-        tickets = new address[](freeTickets);
+        //tickets = new address[](freeTickets);
         nextIndex = 0;
         gameNumber = _gameNumber;
     }

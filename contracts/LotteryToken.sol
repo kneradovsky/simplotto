@@ -29,7 +29,7 @@ contract Simplotoken is TradedToken {
 
     function Simplotoken(uint8 _bits) public {
         totalSupply = INITIAL_SUPPLY;
-        balances[msg.sender] = totalSupply;
+        balances[this] = totalSupply;
         bits = _bits;
         tour = new GameTour(currentGameNumber,bits);
         accumulatedEntropy = block.blockhash(block.number-1);
@@ -91,7 +91,8 @@ contract Simplotoken is TradedToken {
         uint32[] memory indexes = new uint32[](payouts.length);
         for (uint i = 0;i < payouts.length;i++) {
             //too much right shifts is not a problem because we don't plan to have more than 65525 tickets
-            indexes[i] = (pseudoRand & (lastTickIndex << (i+1))) >> (i+1);  
+            indexes[i] = (pseudoRand & (lastTickIndex << (i+1))) >> (i+1);
+            pseudoRand = uint32(generatePseudoRand(bytes32(pseudoRand)));
         }
         //normalize indexes. If index already exists - increment it.
         address[] memory visitedIndexes = new address[](lastTickIndex+1);

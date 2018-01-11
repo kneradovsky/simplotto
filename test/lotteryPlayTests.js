@@ -18,9 +18,8 @@ contract("Simplotoken",function(accounts) {
     })
     it("buy 30 tokens for each account", async () => {
         var ct = await Simplotoken.deployed();
-        var tx = await ct.transfer(ct.contract.address,500000,{from : accounts[0]});
         var contractBalance = await ct.balanceOf(ct.contract.address);
-        assert.equal(contractBalance.valueOf(),500000,"INITIAL SUPPLY won't load to the contract account");
+        assert.equal(contractBalance.valueOf(),1000000,"INITIAL SUPPLY won't load to the contract account");
         var ethBalance = web3.eth.getBalance(ct.contract.address);
         console.log(`Balance of contract is ${web3.fromWei(ethBalance,'ether')} ethers`);
 
@@ -70,7 +69,6 @@ contract("Simplotoken",function(accounts) {
         for(var i=0;i<accounts.length;i++) {
             var account = accounts[i];
             var tokBal = await ct.balanceOf(account);
-            if(i==0) tokBal = tokBal.minus(500000);
             console.log(tokBal);
             var tx = await ct.sell(tokBal.valueOf(),{from: account});
         }
