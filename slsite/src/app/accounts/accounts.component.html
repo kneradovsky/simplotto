@@ -1,8 +1,12 @@
-  <div>
-    {{accs | json }}
-    <div *ngFor="let acc of accs">
-      {{acc}}
-      <div>{{balances[acc].eth | ethval:'ether':4}}</div>
-      <div>{{balances[acc].slt | ethval:'ether':4}}</div>      
+<div>
+  <div *ngFor="let acc of accs">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Balance</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{acc}}</h6>
+        <div>{{balances[acc].eth | ethval:'ether':4}} ETH</div>
+        <div>{{balances[acc].slt}} SLT</div>
+      </div>
     </div>
-  </div> 
+  </div>
+</div>

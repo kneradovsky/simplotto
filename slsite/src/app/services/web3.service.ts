@@ -4,6 +4,7 @@ import contract = require('truffle-contract');
 import Web3  = require('web3');
 
 import simplotto_artifacts = require('../../../../build/contracts/Simplotoken.json');
+import gametour_artifacts = require('../../../../build/contracts/GameTour.json');
 import { WindowRefService } from './window-ref.service';
 
 
@@ -13,6 +14,7 @@ export class Web3Service {
   private web3: Web3;
   private accounts: string[];
   private SimplottoType : any;
+  public GameTourType : any;
   public CurrentTour: any;
   public Simplotoken : any;
 
@@ -36,7 +38,10 @@ export class Web3Service {
     this.setupMetamaskWeb3();
     this.SimplottoType = contract(simplotto_artifacts);
     this.SimplottoType.setProvider(this.web3.currentProvider);
-    this.Simplotoken = this.SimplottoType.at("0x345ca3e014aaf5dca488057592ee47305d9b3e10");    
+    this.GameTourType = contract(gametour_artifacts);
+    this.GameTourType.setProvider(this.web3.currentProvider);
+    //this.SimplottoType.deployed().then(instance => this.Simplotoken=instance);
+    this.Simplotoken = this.SimplottoType.at("0x345ca3e014aaf5dca488057592ee47305d9b3e10");
   }
 
   private refreshAccounts() {
