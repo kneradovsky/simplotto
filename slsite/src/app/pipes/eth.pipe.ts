@@ -10,6 +10,7 @@ export class EthValuePipe implements PipeTransform {
     }
     transform(value: string, unit:string, frac: number) {
         if(value === undefined) value ='0';
+        console.log(value);
         let fstrVal = fromWei(value,unit);
         let fbnVal = new BigNumber(fstrVal);
         let strVal = fbnVal.toFormat(frac);
