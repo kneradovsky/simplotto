@@ -9,6 +9,7 @@ import { Web3Service } from './services/web3.service';
 import { WindowRefService } from './services/window-ref.service';
 import { EthValuePipe } from './pipes/eth.pipe';
 import { TicketsComponent } from './tickets/tickets.component';
+import { LastresultsComponent } from './lastresults/lastresults.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { TicketsComponent } from './tickets/tickets.component';
     AppComponent,
     AccountComponent,
     EthValuePipe,
-    TicketsComponent
+    TicketsComponent,
+    LastresultsComponent
   ],
   imports: [
     BrowserModule,
