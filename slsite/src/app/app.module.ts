@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 
 import { AppComponent } from './app.component';
-import { AccountsComponent } from './accounts/accounts.component';
+import { AccountComponent } from './accounts/accounts.component';
 import { Web3Service } from './services/web3.service';
 import { WindowRefService } from './services/window-ref.service';
 import { EthValuePipe } from './pipes/eth.pipe';
@@ -13,7 +13,7 @@ import { EthValuePipe } from './pipes/eth.pipe';
 @NgModule({
   declarations: [
     AppComponent,
-    AccountsComponent,
+    AccountComponent,
     EthValuePipe
   ],
   imports: [

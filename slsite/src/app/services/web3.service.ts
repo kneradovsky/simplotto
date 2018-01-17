@@ -6,7 +6,7 @@ import Web3  = require('web3');
 import simplotto_artifacts = require('../../../../build/contracts/Simplotoken.json');
 import gametour_artifacts = require('../../../../build/contracts/GameTour.json');
 import { WindowRefService } from './window-ref.service';
-import { SSL_OP_ALL } from 'constants';
+
 
 
 
@@ -34,6 +34,7 @@ export class Web3Service {
   
    private setupMetamaskWeb3() {
     Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
+    
     this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:9545'));
     /*
     if( typeof this.wnd.browser.web3 != undefined) {
@@ -53,17 +54,14 @@ export class Web3Service {
     this.GameTourType = contract(gametour_artifacts);
     this.GameTourType.setProvider(this.web3.currentProvider);
     //this.SimplottoType.deployed().then(instance => this.Simplotoken=instance);
-    this.SLT8 = this.SimplottoType.at("0x30753e4a8aad7f8597332e813735def5dd395028");
-    this.setupEvents(this.SLT8);
+    this.SLT8 = this.SimplottoType.deployed().then(ct => {
+      this.SLT8 = ct;
+      this.setupEvents(this.SLT8);
+    });
+    
   }
 
   private setupEvents(source:any) {
-    console.log(source);
-/*
-      source.allEvents((err,event) => {
-        if(err !=undefined) console.error(err);
-        console.log(event)});
-        */
       source.PricesChanged().watch((err,event) => this.pricesChange.next(event));
       source.TicketBought().watch((err,event) => this.ticketBought.next(event));
       source.TourStarted().watch((err,event) => this.tourStarted.next(event));

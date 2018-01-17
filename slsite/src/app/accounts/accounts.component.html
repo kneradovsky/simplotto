@@ -1,27 +1,28 @@
 <div>
-  <div *ngFor="let acc of accs">
-    <div class="card" style="width: 30rem;">
+    <div class="card" style="width: 35rem;">
       <div class="card-body">
         <h5 class="card-title">Balance</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{acc}}</h6>
-        <div>{{balances[acc].eth | ethval:'ether':4}} ETH</div>
+        <h6 class="card-subtitle mb-2 text-muted">{{account}}</h6>
+        
         <form #amform="ngForm">
           <div class="container">
             <div class="row">
-              <div class="col">{{balances[acc].slt8}} SLT8</div>
+              <div class="col-3">
+                <div>{{balances[account].eth | ethval:'ether':4}} ETH</div>
+                <div>{{balances[account].slt8}} SLT8</div>
+              </div>
               <div class="col"><button type="button" class="btn btn-success" (click)="onBuyTokens8()">Buy</button></div>
               <div class="col"><input type="text" class=""  [(ngModel)]="tokamnt" name="tokamnt"></div>
               <div class="col"><button type="button" class="btn btn-warning" (click)="onSellTokens8()">Sell</button></div> 
             </div>
             <div class="row">
-              <div class="col">{{tokamnt}}</div>
               <div class="col"></div>
+              <div class="col">{{buyPrice.times(tokamnt).toString(10) | ethval:'ether':4}} ETH</div>
               <div class="col"></div>
-              <div class="col"></div>
+              <div class="col">{{sellPrice.times(tokamnt).toString(10) | ethval:'ether':4}} ETH</div>
             </div>
           </div>
         </form>
       </div>
     </div>
-  </div>
 </div>
