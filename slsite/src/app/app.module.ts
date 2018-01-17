@@ -8,13 +8,15 @@ import { AccountComponent } from './accounts/accounts.component';
 import { Web3Service } from './services/web3.service';
 import { WindowRefService } from './services/window-ref.service';
 import { EthValuePipe } from './pipes/eth.pipe';
+import { TicketsComponent } from './tickets/tickets.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     AccountComponent,
-    EthValuePipe
+    EthValuePipe,
+    TicketsComponent
   ],
   imports: [
     BrowserModule,

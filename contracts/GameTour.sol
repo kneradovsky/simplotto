@@ -5,8 +5,9 @@ contract GameTour {
     address[10] public winners;
     uint32 public nextIndex;
     uint32 public freeTickets;
-    address[256] public tickets;
+    address[65536] public tickets;
     uint32 public gameNumber;
+    mapping( address => uint16) public numticks;
     
   
 
@@ -24,6 +25,7 @@ contract GameTour {
         } else {
             freeTickets--;
             tickets[nextIndex] = _player;
+            numticks[_player] = numticks[_player] + 1;
             curTick = nextIndex++;
         }
         return curTick;
@@ -38,4 +40,5 @@ contract GameTour {
     function getWinners() view public returns (address[10]) {
         return winners;
     }
+
 }

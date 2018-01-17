@@ -21,11 +21,11 @@ export class Web3Service {
 
   public accountsObservable = new Subject<string[]>();
   //token events sinks
-  public pricesChange = new Subject<any[]>();
-  public ticketBought = new Subject<any[]>();
-  public tourStarted = new Subject<any[]>();
-  public tourClosed = new Subject<any[]>();
-  public onTransfer = new Subject<any[]>();
+  public pricesChange = new Subject<any>();
+  public ticketBought = new Subject<any>();
+  public tourStarted = new Subject<any>();
+  public tourClosed = new Subject<any>();
+  public onTransfer = new Subject<any>();
 
   constructor(private wnd : WindowRefService) {
     this.setupSimplotto();

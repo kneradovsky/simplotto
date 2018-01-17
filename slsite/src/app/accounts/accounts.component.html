@@ -8,8 +8,8 @@
           <div class="container">
             <div class="row">
               <div class="col-3">
-                <div>{{balances[account].eth | ethval:'ether':4}} ETH</div>
-                <div>{{balances[account].slt8}} SLT8</div>
+                <div>{{eth.toString(10) | ethval:'ether':4}} ETH</div>
+                <div>{{slt8}} SLT8</div>
               </div>
               <div class="col"><button type="button" class="btn btn-success" (click)="onBuyTokens8()">Buy</button></div>
               <div class="col"><input type="text" class=""  [(ngModel)]="tokamnt" name="tokamnt"></div>
