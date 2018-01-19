@@ -10,6 +10,7 @@ import { WindowRefService } from './services/window-ref.service';
 import { EthValuePipe } from './pipes/eth.pipe';
 import { TicketsComponent } from './tickets/tickets.component';
 import { LastresultsComponent } from './lastresults/lastresults.component';
+import { GameresultsComponent } from './gameresults/gameresults.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { LastresultsComponent } from './lastresults/lastresults.component';
     AccountComponent,
     EthValuePipe,
     TicketsComponent,
-    LastresultsComponent
+    LastresultsComponent,
+    GameresultsComponent
   ],
   imports: [
     BrowserModule,

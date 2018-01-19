@@ -13,7 +13,7 @@ export class LastresultsComponent implements OnInit {
   winners : string[] = [];
   payouts : number[] = [];
 
-  constructor(private web3:  Web3Service,private ref: ChangeDetectorRef) { }
+  constructor(protected web3:  Web3Service,protected ref: ChangeDetectorRef) { }
 
   ngOnInit() {
     var self = this;
@@ -29,20 +29,23 @@ export class LastresultsComponent implements OnInit {
     }
   }
 
-  private async updateTourData() {
+  protected async updateTourData() {
     this.lastGameNumber = await this.web3.SLT8.currentGameNumber() - 1;
     if(this.lastGameNumber>=0) {
       let tourAddress = await this.web3.SLT8.prevTours(this.lastGameNumber);
       this.lastTour = this.web3.GameTourType.at(tourAddress);
-      this.winners = await this.lastTour.getWinners();
-      var bits = await this.web3.SLT8.bits();
-      var tickCount = Math.pow(2,bits);
-      for(var i=0;i<this.winners.length;i++) {
-        var p = await this.web3.SLT8.payouts(i);
-        this.payouts[i]=Math.ceil(p*tickCount/100);
-      }
+      this.updateWinners(this.lastTour);
     } else this.lastGameNumber = 0;
 
   }
 
+  protected async updateWinners(gameTour : any) {
+    this.winners = await gameTour.getWinners();
+    var bits = await this.web3.SLT8.bits();
+    var tickCount = Math.pow(2,bits);
+    for(var i=0;i<this.winners.length;i++) {
+      var p = await this.web3.SLT8.payouts(i);
+      this.payouts[i]=Math.ceil(p*tickCount/100);
+    }
+  }
 }

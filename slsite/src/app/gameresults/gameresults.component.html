@@ -1,0 +1,23 @@
+<div>
+  <div class="card"  style="width: 35rem;">
+    <form>
+    <div class="card-body">
+      <h5 class="card-title">Game Results</h5>
+      <h6 class="card-subtitle">Game tour 
+          <select name="currentGameNumber" [ngModel]="currentGameNumber" (ngModelChange)="updateCurrentGameNumber($event)">
+              <option *ngFor="let gameNumber of games" [ngValue]="gameNumber">
+                  Game #{{gameNumber}}
+              </option>
+          </select>
+      </h6>
+      <h5>Winners</h5>
+      <div class="container">
+      <div class="row" *ngFor="let winner of winners ; index as i">
+        <div class="col">{{winner}}</div>
+        <div class="col">got {{payouts[i]}} tokens</div>
+      </div>
+    </div>
+    </div>
+  </form>
+  </div>
+</div>
