@@ -6,6 +6,7 @@ import Web3  = require('web3');
 import simplotto_artifacts = require('../../../../build/contracts/Simplotoken.json');
 import gametour_artifacts = require('../../../../build/contracts/GameTour.json');
 import { WindowRefService } from './window-ref.service';
+import { ErrorService } from './error.service';
 
 
 
@@ -18,6 +19,7 @@ export class Web3Service {
   public GameTourType : any;
   public CurrentTour: any;
   public SLT8 : any;
+  public initFailed = false;
 
   public accountsObservable = new Subject<string[]>();
   //token events sinks
@@ -26,38 +28,50 @@ export class Web3Service {
   public tourStarted = new Subject<any>();
   public tourClosed = new Subject<any>();
   public onTransfer = new Subject<any>();
+ 
 
-  constructor(private wnd : WindowRefService) {
-    this.setupSimplotto();
-    this.refreshAccounts();
+  constructor(private wnd : WindowRefService,private errsvc : ErrorService) {
+    try {
+      this.setupSimplotto();
+      this.refreshAccounts();
+    } catch(err) {
+      this.initFailed = true;
+      this.errsvc.next({title: "web3 init failed",text:"web3 init failed. Please consider using metamask: https://metamask.io",error:err});
+    }
    }
   
    private setupMetamaskWeb3() {
     Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
     
-    this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:9545'));
-    /*
-    if( typeof this.wnd.browser.web3 != undefined) {
+    //this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:9545'));
+
+    if( typeof this.wnd.browser.web3 != "undefined") {
       console.log('use metamask')
       this.web3 = new Web3(this.wnd.browser.web3.currentProvider);
     } else {
-      console.log('fallback to ganache')
+      console.log('no web3');
+      // this.initFailed = true;
+      // this.errsvc.next({title: "web3 init failed",text:"web3 init failed. Please consider using metamask: https://metamask.io"});
       this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:9545'));
     }
-    */
+    return !this.initFailed;
 }
 
   private setupSimplotto() {
-    this.setupMetamaskWeb3();
+    if(!this.setupMetamaskWeb3()) return;
     this.SimplottoType = contract(simplotto_artifacts);
     this.SimplottoType.setProvider(this.web3.currentProvider);
     this.GameTourType = contract(gametour_artifacts);
     this.GameTourType.setProvider(this.web3.currentProvider);
     //this.SimplottoType.deployed().then(instance => this.Simplotoken=instance);
+
     this.SLT8 = this.SimplottoType.deployed().then(ct => {
       this.SLT8 = ct;
       this.setupEvents(this.SLT8);
-    });
+    }).catch(err => {
+      this.errsvc.next({title: "Simplotoken failed", text: "Simplotoken init failed. Are you using correct network?",error: err});
+    })
+    ;
     
   }
 
@@ -72,13 +86,13 @@ export class Web3Service {
   private refreshAccounts() {
     this.web3.eth.getAccounts((err, accs) => {
       if (err != null) {
-        alert(`There was an error fetching your accounts.`);
+        this.errsvc.next({title: "Accounts failed", text: "There was an error fetching your accounts.",error: err});
         return;
       }
 
       // Get the initial account balance so it can be displayed.
       if (accs.length == 0) {
-        alert(`Couldn't get any accounts! Make sure your Ethereum client is configured correctly.`);
+        this.errsvc.next({title: "Accounts failed", text: "Couldn't get any accounts! Make sure your Ethereum client is configured correctly.",error: null});
         return;
       }
 
