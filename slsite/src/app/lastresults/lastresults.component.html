@@ -1,15 +1,13 @@
-<div>
-  <div class="card"  style="width: 35rem;">
+  <div class="card h-100">
     <div class="card-body">
       <h5 class="card-title">Last Results</h5>
       <h6 class="card-subtitle">Game tour #{{lastGameNumber}}</h6>
       <h5>Winners</h5>
       <div class="container">
       <div class="row" *ngFor="let winner of winners ; index as i">
-        <div class="col">{{winner}}</div>
-        <div class="col">got {{payouts[i]}} tokens</div>
+        <div class="col text-left">{{winner}}</div>
+        <div class="col text-right">{{payouts[i]}} SLT</div>
       </div>
     </div>
     </div>
   </div>
-</div>

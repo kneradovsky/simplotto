@@ -67,6 +67,7 @@ export class Web3Service {
 
     this.SLT8 = this.SimplottoType.deployed().then(ct => {
       this.SLT8 = ct;
+      console.log(`Contract at: ${ct.address}`);
       this.setupEvents(this.SLT8);
     }).catch(err => {
       this.errsvc.next({title: "Simplotoken failed", text: "Simplotoken init failed. Are you using correct network?",error: err});

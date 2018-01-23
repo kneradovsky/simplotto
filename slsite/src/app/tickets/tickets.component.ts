@@ -28,6 +28,7 @@ export class TicketsComponent implements OnInit {
       if(self.currentTour===undefined) return;
       self.currentTour.numticks(this.account).then(ticks => this.tickets=ticks);
     });
+    this.web3.tourClosed.subscribe(event => this.tickets=0)
   }
 
   async ngOnChanges(changes: SimpleChanges) {
