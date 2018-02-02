@@ -31,7 +31,7 @@ contract TradedToken is MintableToken, Migrations {
     }
 
     function sell(uint amount) public returns (uint revenue) {
-        //require(balances[msg.sender] >= amount);
+        require(balances[msg.sender] >= amount);
         transfer(this,amount);
         revenue = amount.mul(sellPrice);
         require(msg.sender.send(revenue));

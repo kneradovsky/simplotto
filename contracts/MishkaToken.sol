@@ -45,6 +45,7 @@ contract Mishka is MintableToken, Migrations {
         } else if (ptype == PluginType.POS) {
             prev = pos;
             pos = dest;
+            setGlobalLimit(pos,totalSupply);
         } else {
             return false;
         }
@@ -71,6 +72,8 @@ contract Mishka is MintableToken, Migrations {
         require(contractLimit[msg.sender] > 0); //means contract registered
         if (contractOwnLimit[from][msg.sender] > 0) {
             require(contractOwnLimit[from][msg.sender] > amount); //if client sender set own limit then use it
+        } else {
+            require(contractLimit[msg.sender] > limit);
         }
         return transferInternal(from,to,amount);
     }
