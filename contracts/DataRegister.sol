@@ -16,7 +16,7 @@ contract DataRegister is Migrations,Ownable {
 
     function DataRegister(Registrar _register) public {
         reg = _register;
-        _register.registerDataRegister(this);
+        //_register.registerDataRegister(this);
     }
 
     function registerDataSource(string strname, DataSource src) public onlyOwner {
@@ -29,6 +29,11 @@ contract DataRegister is Migrations,Ownable {
             dataSources[name] = src;
         }
     }
+
+    function registerDataSourceAddr(DataSource src) public onlyOwner {
+        dataSourcesAddr[src] = src;
+    }
+    
 
     function getData(string strname) public returns (bytes) {
         uint256 name = packString(strname);
