@@ -7,7 +7,7 @@ import './Tokenizer.sol';
 
 contract Pos is Migrations,Tokenizer {
     using SafeMath for uint256;
-    MishkaToken token;
+    Mishka token;
     bool tokenSet;
 
     uint256 public sellPrice;
@@ -16,7 +16,6 @@ contract Pos is Migrations,Tokenizer {
     
     
     function Pos() public {
-        token = address(0);
         tokenSet = false;
         sellPrice = 1000000;
         buyPrice = 1000000;
@@ -25,14 +24,14 @@ contract Pos is Migrations,Tokenizer {
     function buy() public tokenized payable returns (uint amount) {
         require(token!=address(0));
         amount = msg.value.div(buyPrice);
-        require(token.balances(this) >= amount);
+        require(token.balanceOf(this) >= amount);
         token.transfer(msg.sender,amount);
         return amount;
     }
 
     function sell(uint256 amount) public tokenized returns (uint256 revenue) {
         require(token!=address(0));
-        uint256 decimalsDiv = 10**token.decimals();
+        uint256 decimalsDiv = uint256(10)**token.decimals();
         revenue = amount.mul(sellPrice).div(decimalsDiv);
         require(token.transferOnBehalf(msg.sender,this,amount));
         require(msg.sender.send(revenue));

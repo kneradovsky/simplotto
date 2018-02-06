@@ -6,9 +6,9 @@ import './MishkaToken.sol';
 
 contract Tokenizer is Ownable,Migrations {
     bool private tokenSet = false;
-    MishkaToken public token;
+    Mishka public token;
 
-    function setToken(MishkaToken _token) public tokenSetter onlyOwner {
+    function setToken(Mishka _token) public onlyOwner {
         require(!tokenSet);
         token = _token;
         tokenSet = true;

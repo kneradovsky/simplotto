@@ -1,11 +1,13 @@
 pragma solidity ^0.4.17; 
 
+import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './GameTour.sol';
 import './MishkaToken.sol';
 
-contract RaffleLottery is Migrations,Ownable {
 
-    uint32 public currentGameNumber = 0;
+contract RaffleLottery is Migrations,Ownable {
+    using SafeMath for uint256;
+    uint32 public currentGameNumber = 0;    
     GameTour public tour;
     mapping (uint => GameTour) public prevTours;
     
@@ -20,10 +22,10 @@ contract RaffleLottery is Migrations,Ownable {
     event TourStarted(uint tourNumber,uint freeTickets);
     event TourClosed(uint tourNumber, address[10] winners);
 
-    MishkaToken private token;
+    Mishka private token;
     uint256 ticketPrice = 0;
 
-    function RaffleLottery(MishkaToken _token, uint8 _bits, uint256 _ticketPrice) {
+    function RaffleLottery(Mishka _token, uint8 _bits, uint256 _ticketPrice) public {
         token = _token;
         bits = _bits;
         ticketPrice = _ticketPrice;
@@ -60,7 +62,7 @@ contract RaffleLottery is Migrations,Ownable {
             require(token.transferOnBehalf(msg.sender,this,ticketPrice));
         } else {
             //refund ticket price to pay comission fee
-            token.trasfer(msg.sender,ticketPrice);
+            token.transfer(msg.sender,ticketPrice);
             //close current game
             closeGame();
             //start another game

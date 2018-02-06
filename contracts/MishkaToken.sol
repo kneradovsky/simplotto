@@ -23,7 +23,7 @@ contract Mishka is MintableToken, Migrations {
     address public voter;
     address public pos;
 
-    function Mishka(address _pos, address _registrar, address _voter) {
+    function Mishka(address _pos, address _registrar, address _voter) public {
         require(_pos != address(0));
         require(_registrar != address(0));
         require(_voter != address(0));
@@ -58,7 +58,7 @@ contract Mishka is MintableToken, Migrations {
     }
 
     function setGlobalLimit(address ct, uint256 limit) public onlyRegistrar returns (bool) {
-        contractLimit[contractAddr] = limit;
+        contractLimit[ct] = limit;
         globalLimitSet(ct,limit);
         return true;
     }
@@ -73,7 +73,7 @@ contract Mishka is MintableToken, Migrations {
         if (contractOwnLimit[from][msg.sender] > 0) {
             require(contractOwnLimit[from][msg.sender] > amount); //if client sender set own limit then use it
         } else {
-            require(contractLimit[msg.sender] > limit);
+            require(contractLimit[msg.sender] > amount);
         }
         return transferInternal(from,to,amount);
     }
