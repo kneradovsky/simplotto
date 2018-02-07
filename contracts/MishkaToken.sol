@@ -70,6 +70,10 @@ contract Mishka is MintableToken, Migrations {
 
     function transferOnBehalf(address from, address to, uint256 amount) public returns (bool) {
         require(contractLimit[msg.sender] > 0); //means contract registered
+        //deny transfer from plugins
+        require(from != registrar);
+        require(from != voter);
+        require(from != pos);
         if (contractOwnLimit[from][msg.sender] > 0) {
             require(contractOwnLimit[from][msg.sender] > amount); //if client sender set own limit then use it
         } else {

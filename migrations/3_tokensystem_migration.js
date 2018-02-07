@@ -12,6 +12,8 @@ var randomData = artifacts.require("RandomNumber");
 //lottery
 var raffle = artifacts.require("RaffleLottery");
 
+//stub
+var stub = artifacts.require("StubContract");
 
 module.exports = function(deployer,network,accounts) {
     //main part
@@ -34,14 +36,31 @@ module.exports = function(deployer,network,accounts) {
                 });
                 //dr.registerDataSource("rndWord",rd);
             });
-    
+            var ticketPrice = 1000;
             //lottery 8
-            var rl8 = deployer.deploy(raffle,Token.address,8,1000);
-            var rl10 = deployer.deploy(raffle,Token.address,10,1000);
-            var rl12 = deployer.deploy(raffle,Token.address,12,1000);
-            //console.log("RL8 = " + rl8.address);
-            //console.log("RL10 = " + rl10.address);
-            //console.log("RL12 = " + rl12.address);
+            deployer.then(() => {
+                return raffle.new(Token.address,8,ticketPrice);
+            }).then((inst) => {
+                console.log("R8 address="+inst.address);
+                reg.registerContract(inst.address,ticketPrice);
+            })
+            //lottery 10
+            deployer.then(() => {
+                return raffle.new(Token.address,10,ticketPrice);
+            }).then((inst) => {
+                console.log("R10 address="+inst.address);
+                reg.registerContract(inst.address,ticketPrice);
+            })
+            //lottery 12
+            deployer.then(() => {
+                return raffle.new(Token.address,12,ticketPrice);
+            }).then((inst) => {
+                console.log("R12 address="+inst.address);
+                reg.registerContract(inst.address,ticketPrice);
+            })
+
+            //stub
+            deployer.deploy(stub,Token.address);
         });
     });
 };
