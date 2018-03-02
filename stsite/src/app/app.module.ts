@@ -14,6 +14,7 @@ import { LastresultsComponent } from './lastresults/lastresults.component';
 import { GameresultsComponent } from './gameresults/gameresults.component';
 import { ErrorsComponent } from './errors/errors.component';
 import { ErrorService } from './services/error.service';
+import { GameinfoComponent } from './gameinfo/gameinfo.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ErrorService } from './services/error.service';
     TicketsComponent,
     LastresultsComponent,
     GameresultsComponent,
-    ErrorsComponent
+    ErrorsComponent,
+    GameinfoComponent
   ],
   imports: [
     BrowserModule,

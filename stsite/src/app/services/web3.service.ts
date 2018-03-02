@@ -3,8 +3,13 @@ import { Subject } from 'rxjs/Subject';
 import contract = require('truffle-contract');
 import Web3  = require('web3');
 
-import simplotto_artifacts = require('../../../../build/contracts/Simplotoken.json');
-import gametour_artifacts = require('../../../../build/contracts/GameTour.json');
+import gametour_artefacts = require('../../../../build/contracts/GameTour.json');
+
+import token_artefacts = require('../../../../build/contracts/MishaToken.json');
+import pos_artefacts = require('../../../../build/contracts/Pos.json');
+import raffle_artefacts = require('../../../../build/contracts/RaffleLottery.json');
+
+
 import { WindowRefService } from './window-ref.service';
 import { ErrorService } from './error.service';
 
@@ -15,24 +20,33 @@ import { ErrorService } from './error.service';
 export class Web3Service {
   private web3: Web3;
   private accounts: string[];
-  private SimplottoType : any;
+  private RaffleType : any;
+  private TokenType : any;
+  private PosType : any;
   public GameTourType : any;
+  public Token : any;
+  public Pos : any;
   public CurrentTour: any;
   public SLT8 : any;
+  public SLT10 : any;
+  public SLT12 : any;
+
   public initFailed = false;
 
   public accountsObservable = new Subject<string[]>();
   //token events sinks
   public pricesChange = new Subject<any>();
-  public ticketBought = new Subject<any>();
-  public tourStarted = new Subject<any>();
-  public tourClosed = new Subject<any>();
   public onTransfer = new Subject<any>();
+
+  public ticketBought = {};
+  public tourStarted = {};
+  public tourClosed = {};
+  
  
 
   constructor(private wnd : WindowRefService,private errsvc : ErrorService) {
     try {
-      this.setupSimplotto();
+      this.setupTokenSystem();
       this.refreshAccounts();
     } catch(err) {
       this.initFailed = true;
@@ -57,31 +71,40 @@ export class Web3Service {
     return !this.initFailed;
 }
 
-  private setupSimplotto() {
+  private setupTokenSystem() {
     if(!this.setupMetamaskWeb3()) return;
-    this.SimplottoType = contract(simplotto_artifacts);
-    this.SimplottoType.setProvider(this.web3.currentProvider);
-    this.GameTourType = contract(gametour_artifacts);
-    this.GameTourType.setProvider(this.web3.currentProvider);
-    //this.SimplottoType.deployed().then(instance => this.Simplotoken=instance);
-
-    this.SLT8 = this.SimplottoType.deployed().then(ct => {
-      this.SLT8 = ct;
-      console.log(`Contract at: ${ct.address}`);
-      this.setupEvents(this.SLT8);
-    }).catch(err => {
-      this.errsvc.next({title: "Simplotoken failed", text: "Simplotoken init failed. Are you using correct network?",error: err});
-    })
-    ;
-    
+    this.TokenType = contract(token_artefacts);
+    this.PosType = contract(pos_artefacts);
+    this.TokenType.deployed().then(ct => {
+      this.Token = ct;
+      console.log(`Token at ${ct.address}`);
+      this.Token.Transfer().watch((err,event) => this.onTransfer.next(event));
+      this.PosType.deployed().then(ct => {
+        this.Pos = ct;
+        this.Pos.PricesChanged().watch((err,event) => this.pricesChange.next(event));
+        console.log(`POS at ${ct.address}`);
+        this.setupLottery();
+      });
+    });
   }
 
-  private setupEvents(source:any) {
-      source.PricesChanged().watch((err,event) => this.pricesChange.next(event));
-      source.TicketBought().watch((err,event) => this.ticketBought.next(event));
-      source.TourStarted().watch((err,event) => this.tourStarted.next(event));
-      source.TourClosed().watch((err,event) => this.tourClosed.next(event));
-      source.Transfer().watch((err,event) => this.onTransfer.next(event));
+  private setupLottery() {
+    this.RaffleType = contract(raffle_artefacts);
+    this.SLT8 = this.RaffleType.at("");
+    this.setupEvents(this.SLT8,8);
+    this.SLT10 = this.RaffleType.at("");
+    this.setupEvents(this.SLT10,10);
+    this.SLT12 = this.RaffleType.at("");
+    this.setupEvents(this.SLT12,12);
+  }
+
+  private setupEvents(source:any,bits) {
+    this.ticketBought[bits]=new Subject<any>();
+    this.tourClosed[bits] = new Subject<any>();
+    this.tourStarted[bits] = new Subject<any>();
+    source.TicketBought().watch((err,event) => this.ticketBought[bits].next(event));
+    source.TourStarted().watch((err,event) => this.tourStarted[bits].next(event));
+    source.TourClosed().watch((err,event) => this.tourClosed[bits].next(event));
   }
 
   private refreshAccounts() {

@@ -10,12 +10,14 @@ import { LastresultsComponent } from '../lastresults/lastresults.component';
 })
 export class GameresultsComponent extends LastresultsComponent implements OnInit {
   @Input() account: string;
+  @Input() bits :number;
   lastGameNumber: number;
   currentGameNumber: number;
   currentTour: any = {};
   winners: string[] = [];
   payouts: number[] = [];
   games: number[] = [];
+  SLT : any;
 
   constructor(protected web3: Web3Service, protected ref: ChangeDetectorRef) {
     super(web3, ref);
@@ -23,7 +25,7 @@ export class GameresultsComponent extends LastresultsComponent implements OnInit
 
   ngOnInit() {
     var self = this;
-    this.web3.tourClosed.subscribe(event => {
+    this.web3.tourClosed[this.bits].subscribe(event => {
       self.games.push(event.args.tourNumber);
       self.lastGameNumber = event.args.tourNumber;
     })
@@ -49,14 +51,13 @@ export class GameresultsComponent extends LastresultsComponent implements OnInit
 
   protected async updateTourData() {
     if (this.currentGameNumber >= 0) {
-      let tourAddress = await this.web3.SLT8.prevTours(this.currentGameNumber);
+      let tourAddress = await this.SLT.prevTours(this.currentGameNumber);
       this.currentTour = this.web3.GameTourType.at(tourAddress);
       this.winners = await this.currentTour.getWinners();
-      var bits = await this.web3.SLT8.bits();
-      var tickCount = Math.pow(2, bits);
+      var tickCount = Math.pow(2, this.bits);
       if (this.payouts.length != this.winners.length) {
         for (var i = 0; i < this.winners.length; i++) {
-          var p = await this.web3.SLT8.payouts(i);
+          var p = await this.SLT.payouts(i);
           this.payouts[i] = Math.ceil(p * tickCount / 100);
         }
       }
@@ -65,7 +66,13 @@ export class GameresultsComponent extends LastresultsComponent implements OnInit
 
 
   protected async updateGames() {
-    this.lastGameNumber = await this.web3.SLT8.currentGameNumber() - 1;
+    switch(this.bits) {
+      case 8 : this.SLT = this.web3.SLT8;break;
+      case 10 : this.SLT = this.web3.SLT10;break;
+      case 12 : this.SLT = this.web3.SLT12;break;
+      default: throw("Invalid bits parameter");
+    }    
+    this.lastGameNumber = await this.SLT.currentGameNumber() - 1;
     if (this.currentGameNumber == -1) this.currentGameNumber = this.lastGameNumber;
     this.games = Array(this.lastGameNumber + 1).fill(0).map((x, i) => i);
   }
